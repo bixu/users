@@ -113,7 +113,7 @@ action :create do
 
         directory "#{home_dir}/.ssh" do
           owner u['username']
-          group u['gid'] || u['username']
+          group u['gid'] || Etc.getpwnam(u['username']).gid
           mode "0700"
         end
 
@@ -122,7 +122,7 @@ action :create do
             source "authorized_keys.erb"
             cookbook new_resource.cookbook
             owner u['username']
-            group u['gid'] || u['username']
+            group u['gid'] || Etc.getpwnam(u['username']).gid
             mode "0600"
             variables :ssh_keys => u['ssh_keys']
           end
@@ -134,7 +134,7 @@ action :create do
             source "private_key.erb"
             cookbook new_resource.cookbook
             owner u['id']
-            group u['gid'] || u['id']
+            group u['gid'] || Etc.getpwnam(u['username']).gid
             mode "0400"
             variables :private_key => u['ssh_private_key']
           end
@@ -146,7 +146,7 @@ action :create do
             source "public_key.pub.erb"
             cookbook new_resource.cookbook
             owner u['id']
-            group u['gid'] || u['id']
+            group u['gid'] || Etc.getpwnam(u['username']).gid
             mode "0400"
             variables :public_key => u['ssh_public_key']
           end
